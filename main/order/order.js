@@ -22,23 +22,23 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
             orders: [
                 {orderId: 1, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
-                        {isbn: "1", title: "book1", price:"23"},
-                        {isbn: "2", title: "book2", price:"23"}
+                        {isbn: "1", title: "book1", price: "23"},
+                        {isbn: "2", title: "book2", price: "23"}
                     ],
                     amount: "123.45",
                     needConfirmation: false},
                 {orderId: 2, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
-                        {isbn: "1", title: "book1", price:"23"},
-                        {isbn: "3", title: "book3", price:"23"},
-                        {isbn: "2", title: "book2", price:"23"}
+                        {isbn: "1", title: "book1", price: "23"},
+                        {isbn: "3", title: "book3", price: "23"},
+                        {isbn: "2", title: "book2", price: "23"}
                     ],
                     amount: "456.33",
                     needConfirmation: true},
                 {orderId: 3, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
-                        {isbn: "1", title: "book1", price:"23"},
-                        {isbn: "2", title: "book2", price:"23"}
+                        {isbn: "1", title: "book1", price: "23"},
+                        {isbn: "2", title: "book2", price: "23"}
                     ],
                     amount: "789.12",
                     needConfirmation: true}
@@ -53,7 +53,7 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
 
         $scope.selectOrder = function (anOrder) {
 
-            if($scope.selectedOrder.originalOrder == anOrder){
+            if ($scope.selectedOrder.originalOrder == anOrder) {
                 console.log("select the already selected order. Do nothing.");
                 return;
             }
@@ -91,11 +91,11 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
                 return false;
 
             return ($scope.selectedOrder.editedOrder.amount != $scope.selectedOrder.originalOrder.amount)
-            || ($scope.selectedOrder.editedOrder.books.length != $scope.selectedOrder.originalOrder.books.length)
+                || ($scope.selectedOrder.editedOrder.books.length != $scope.selectedOrder.originalOrder.books.length)
 
         };
 
-        $scope.removeBookFromEditedOrder = function(bookToRemove){
+        $scope.removeBookFromEditedOrder = function (bookToRemove) {
             var books = $scope.selectedOrder.editedOrder.books
             books = _.filter(books, function (book) {
                 return book != bookToRemove;
@@ -104,6 +104,23 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
             $scope.selectedOrder.editedOrder.books = books;
         };
 
+        $scope.newBookIsbn = "";
+        $scope.newBookTitle = "";
+
+
+        $scope.addBook = function () {
+            if ($scope.canAddBookToOrder()) {
+                $scope.selectedOrder.editedOrder.books.push({isbn: $scope.newBookIsbn, title: $scope.newBookTitle, price: "???"});
+                $scope.newBookIsbn = '';
+                $scope.newBookTitle = '';
+            }else{
+                $scope.alerts.push({type:'danger', msg: 'provide title and isbn of book to add!'});
+            }
+        };
+
+        $scope.canAddBookToOrder = function(){
+            return !_.isEmpty($scope.newBookIsbn) && !_.isEmpty($scope.newBookTitle)
+        };
 
 
         $scope.alerts = [

@@ -22,22 +22,23 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
             orders: [
                 {orderId: 1, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
-                        {isbn: "1", title: "book1"},
-                        {isbn: "2", title: "book2"}
+                        {isbn: "1", title: "book1", price:"23"},
+                        {isbn: "2", title: "book2", price:"23"}
                     ],
                     amount: "123.45",
                     needConfirmation: false},
                 {orderId: 2, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
-                        {isbn: "1", title: "book1"},
-                        {isbn: "2", title: "book2"}
+                        {isbn: "1", title: "book1", price:"23"},
+                        {isbn: "3", title: "book3", price:"23"},
+                        {isbn: "2", title: "book2", price:"23"}
                     ],
                     amount: "456.33",
                     needConfirmation: true},
                 {orderId: 3, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
-                        {isbn: "1", title: "book1"},
-                        {isbn: "2", title: "book2"}
+                        {isbn: "1", title: "book1", price:"23"},
+                        {isbn: "2", title: "book2", price:"23"}
                     ],
                     amount: "789.12",
                     needConfirmation: true}
@@ -76,7 +77,8 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
         $scope.saveEditedOrder = function () {
             console.log("save order");
 
-            $scope.selectedOrder.originalOrder = JSON.parse(JSON.stringify($scope.selectedOrder.editedOrder));
+            $scope.selectedOrder.originalOrder.amount = $scope.selectedOrder.editedOrder.amount;
+            $scope.selectedOrder.originalOrder.books = JSON.parse(JSON.stringify($scope.selectedOrder.editedOrder.books));
             $scope.selectedOrder.modified = false;
         };
 
@@ -88,8 +90,21 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
             if ($scope.selectedOrder.editedOrder == null || $scope.selectedOrder.originalOrder == null)
                 return false;
 
-            return $scope.selectedOrder.editedOrder.amount != $scope.selectedOrder.originalOrder.amount
+            return ($scope.selectedOrder.editedOrder.amount != $scope.selectedOrder.originalOrder.amount)
+            || ($scope.selectedOrder.editedOrder.books.length != $scope.selectedOrder.originalOrder.books.length)
+
         };
+
+        $scope.removeBookFromEditedOrder = function(bookToRemove){
+            var books = $scope.selectedOrder.editedOrder.books
+            books = _.filter(books, function (book) {
+                return book != bookToRemove;
+            });
+
+            $scope.selectedOrder.editedOrder.books = books;
+        };
+
+
 
         $scope.alerts = [
 //            { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },

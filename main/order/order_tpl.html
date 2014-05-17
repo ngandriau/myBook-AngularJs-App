@@ -12,12 +12,12 @@
             <div>
                 <label class="radio-inline">
                     <input type="radio" name="orderIdSearchMode" value="orderId"
-                           ng-model="orderSearch.mode" ng-checked="{{isOrderIdSearchMode()}}"/>
+                           ng-model="orderSearch.mode" ng-checked="isOrderIdSearchMode()"/>
                     orderId
                 </label>
                 <label class="radio-inline">
                     <input type="radio" name="lastnameSearchMode" value="lastname" ng-model="orderSearch.mode"
-                           ng-checked="{{!isOrderIdSearchMode()}}"/>
+                           ng-checked="!isOrderIdSearchMode()"/>
                     customer lastname
                 </label>
             </div>
@@ -68,9 +68,30 @@
         </div>
         <div id="orderEditor">
             <label class="radio-inline">
-                <input type="text" ng-model="selectedOrder.editedOrder.amount"/>
-                amount: $USD
+                amount: $USD<input type="text" ng-model="selectedOrder.editedOrder.amount"/>
             </label>
+        </div>
+        <div id="booksOfOrder">
+            <label class="radio-inline"> books:</label>
+            <table class="table table-striped table-condensed table-hover">
+                <thead>
+                <tr>
+                    <th class="id">title</th>
+                    <th class="name">isbn</th>
+                    <th class="name">price</th>
+                    <th class="action">action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="book in selectedOrder.editedOrder.books" ng-click="selectBookInOrder(book)">
+                    <td>{{book.title}}</td>
+                    <td>{{book.isbn}}</td>
+                    <td>{{book.price}}</td>
+                    <td><button type="button" class="btn glyphicon glyphicon-remove"
+                                ng-click="removeBookFromEditedOrder(book)"></button></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>

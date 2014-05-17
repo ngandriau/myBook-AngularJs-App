@@ -2,10 +2,11 @@ var BookApp = angular.module("BookApp");
 
 var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
 
+
         $scope.orderSearch = {value: "", mode: "orderId"};
         $scope.isValidSearch = function () {
             return !_.isEmpty($scope.orderSearch.value);
-        }
+        };
         $scope.isOrderIdSearchMode = function () {
             return  $scope.orderSearch.mode == "orderId"
         };
@@ -19,28 +20,88 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
         $scope.orderSearchResult = {
             totalNbResults: 10,
             orders: [
-                {orderId: 1, customerFirstname:"Nicolas", customerLastname:"Gandriau",
+                {orderId: 1, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
                         {isbn: "1", title: "book1"},
                         {isbn: "2", title: "book2"}
-                    ]},
-                {orderId: 2, customerFirstname:"Nicolas", customerLastname:"Gandriau",
+                    ],
+                    amount: "123.45",
+                    needConfirmation: false},
+                {orderId: 2, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
                         {isbn: "1", title: "book1"},
                         {isbn: "2", title: "book2"}
-                    ]},
-                {orderId: 3, customerFirstname:"Nicolas", customerLastname:"Gandriau",
+                    ],
+                    amount: "456.33",
+                    needConfirmation: true},
+                {orderId: 3, customerFirstname: "Nicolas", customerLastname: "Gandriau",
                     books: [
                         {isbn: "1", title: "book1"},
                         {isbn: "2", title: "book2"}
-                    ]}
+                    ],
+                    amount: "789.12",
+                    needConfirmation: true}
             ]};
 
-        $scope.selectOrder = function(anOrder){
-            console.log("selected order with id:" + anOrder.orderId);
-            $scope.selectedOrder = anOrder;
+        // SELECTED ORDER
+
+        $scope.selectedOrder = {
+            editedOrder: null,
+            originalOrder: null //permit to make comparison
         };
 
-        $scope.selectedOrder;
+        $scope.selectOrder = function (anOrder) {
+
+            if($scope.selectedOrder.originalOrder == anOrder){
+                console.log("select the already selected order. Do nothing.");
+                return;
+            }
+
+            if ($scope.isSelectedOrderModified()) {
+                console.log("select an order in table, but current order is modified! - reject");
+                $scope.alerts.push({type: 'danger', msg: 'You cannot select an order if you have started to edit another one. Revert the change or save them.'});
+                return;
+            } else {
+                $scope.selectedOrder.originalOrder = anOrder;
+                $scope.revertEditedOrder();
+            }
+
+        };
+
+        $scope.revertEditedOrder = function () {
+            $scope.selectedOrder.editedOrder = JSON.parse(JSON.stringify($scope.selectedOrder.originalOrder));
+            $scope.selectedOrder.modified = false;
+        };
+
+        $scope.saveEditedOrder = function () {
+            console.log("save order");
+
+            $scope.selectedOrder.originalOrder = JSON.parse(JSON.stringify($scope.selectedOrder.editedOrder));
+            $scope.selectedOrder.modified = false;
+        };
+
+        $scope.confirmEditedOrder = function () {
+            console.log("confirm order");
+        };
+
+        $scope.isSelectedOrderModified = function () {
+            if ($scope.selectedOrder.editedOrder == null || $scope.selectedOrder.originalOrder == null)
+                return false;
+
+            return $scope.selectedOrder.editedOrder.amount != $scope.selectedOrder.originalOrder.amount
+        };
+
+        $scope.alerts = [
+//            { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },
+//            { type: 'success', msg: 'Well done! You successfully read this important alert message.' }
+        ];
+
+        $scope.addAlert = function () {
+            $scope.alerts.push({msg: 'Another alert!'});
+        };
+
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        };
     }
 );

@@ -10,22 +10,33 @@
         </div>
         <div class="panel-body">
             <form class="form-inline">
-                <div>
-                    <label class="radio-inline">
-                        <input type="radio" name="orderIdSearchMode" value="orderId"
-                               ng-model="orderSearch.mode" ng-checked="isOrderIdSearchMode()"/>
-                        orderId
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="lastnameSearchMode" value="lastname" ng-model="orderSearch.mode"
-                               ng-checked="!isOrderIdSearchMode()"/>
-                        customer lastname
-                    </label>
+                <div class="form-group">
+                    <div class="col-lg-10">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="orderIdSearchMode" value="orderId"
+                                       ng-model="orderSearch.mode" ng-checked="isOrderIdSearchMode()"/>
+                                orderId
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="lastnameSearchMode" value="lastname" ng-model="orderSearch.mode"
+                                       ng-checked="!isOrderIdSearchMode()"/>
+                                customer lastname
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="text" class="form-control" ng-model="orderSearch.value" ng-model-instant>
+                    <button ng-click="searchOrder()" ng-disabled="!isValidSearch()"
+                            class="btn btn-sm glyphicon glyphicon-search">Search
+                    </button>
                 </div>
-                <input type="text" ng-model="orderSearch.value" ng-model-instant>
-                <button ng-click="searchOrder()" ng-disabled="!isValidSearch()"
-                        class="btn btn-sm glyphicon glyphicon-search">Search
-                </button>
+
+
+
+
             </form>
         </div>
     </div>
@@ -75,10 +86,9 @@
 
         </div>
         <div class="panel-body">
-
-            <div id="orderEditor">
-                <label class="radio-inline">
-                    amount: $USD<input type="text" ng-model="selectedOrder.editedOrder.amount"/>
+            <div id="orderEditor" class="form-group">
+                <label class="form-inline">
+                    amount: $USD<input type="text" class="form-control" ng-model="selectedOrder.editedOrder.amount"/>
                 </label>
             </div>
 
@@ -111,7 +121,7 @@
 
 
             <div id="newBook" class="panel panel-default">
-                <div class="panel-heading">new book:</div>
+                <div class="panel-heading">add book to order:</div>
                 <div class="panel-body">
                     <form class="form-inline">
                         <fieldset>

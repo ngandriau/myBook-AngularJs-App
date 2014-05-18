@@ -24,7 +24,7 @@
                 </div>
                 <input type="text" ng-model="orderSearch.value" ng-model-instant>
                 <button ng-click="searchOrder()" ng-disabled="!isValidSearch()"
-                        class="btn glyphicon glyphicon-search">Search
+                        class="btn btn-sm glyphicon glyphicon-search">Search
                 </button>
             </form>
         </div>
@@ -54,18 +54,28 @@
     </div>
     <div id="orderEditorDiv" ng-show="selectedOrder.editedOrder" ng-class="ng-hide" class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">order {{selectedOrder.editedOrder.orderId}}</h3>
+            <h3 class="panel-title">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">order {{selectedOrder.editedOrder.orderId}}</div>
+                        <div class="col-md-6 text-right">
+                           <span class="btn-group">
+                                <button type="button" class="btn  btn-sm glyphicon glyphicon-send"
+                                        ng-disabled="!selectedOrder.editedOrder.needConfirmation"
+                                        ng-click="confirmEditedOrder()">Confirm</button>
+                <button type="button" class="btn  btn-sm glyphicon glyphicon-share-alt" ng-disabled="!isSelectedOrderModified()"
+                        ng-click="revertEditedOrder()">Revert</button>
+                <button type="button" class="btn  btn-sm glyphicon glyphicon-save" ng-disabled="!isSelectedOrderModified()"
+                        ng-click="saveEditedOrder()">Save</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </h3>
+
         </div>
         <div class="panel-body">
-            <div id="orderEditorToolbar" class="btn-group  pull-right">
-                <button type="button" class="btn glyphicon glyphicon-send"
-                        ng-disabled="!selectedOrder.editedOrder.needConfirmation"
-                        ng-click="confirmEditedOrder()">Confirm</button>
-                <button type="button" class="btn glyphicon glyphicon-share-alt" ng-disabled="!isSelectedOrderModified()"
-                        ng-click="revertEditedOrder()">Revert</button>
-                <button type="button" class="btn glyphicon glyphicon-save" ng-disabled="!isSelectedOrderModified()"
-                        ng-click="saveEditedOrder()">Save</button>
-            </div>
+
             <div id="orderEditor">
                 <label class="radio-inline">
                     amount: $USD<input type="text" ng-model="selectedOrder.editedOrder.amount"/>
@@ -90,7 +100,7 @@
                             <td>{{book.isbn}}</td>
                             <td>{{book.price}}</td>
                             <td>
-                                <button type="button" class="btn glyphicon glyphicon-remove"
+                                <button type="button" class="btn btn-sm glyphicon glyphicon-remove"
                                         ng-click="removeBookFromEditedOrder(book)"></button>
                             </td>
                         </tr>
@@ -111,7 +121,7 @@
                                            ng-model="newBookIsbn" ng-model-instant>
                                     <input type="text" class="form-control" id="inputNewBookTitle" placeholder="Title"
                                            ng-model="newBookTitle" ng-model-instant>
-                                    <button class="btn glyphicon glyphicon-plus"
+                                    <button class="btn btn-sm glyphicon glyphicon-plus"
                                             ng-click="addBook()" ng-disabled="!canAddBookToOrder()"></button>
                                 </div>
                             </div>

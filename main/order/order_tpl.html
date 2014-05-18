@@ -51,12 +51,14 @@
                 <tr>
                     <th class="id">orderId</th>
                     <th class="name">customer</th>
+                    <th class="name">status</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="order in orderSearchResult.orders" ng-click="selectOrder(order)">
-                    <td>{{order.orderId}}</td>
+                    <td>{{order.id}}</td>
                     <td>{{order.customerFirstname}} - {{order.customerLastname}}</td>
+                    <td>{{order.status}}</td>
                 </tr>
                 </tbody>
 
@@ -68,7 +70,7 @@
             <h3 class="panel-title">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="col-md-6">order {{selectedOrder.editedOrder.orderId}}</div>
+                        <div class="col-md-6">order {{selectedOrder.editedOrder.id}}</div>
                         <div class="col-md-6 text-right">
                            <span class="btn-group">
                                 <button type="button" class="btn  btn-sm glyphicon glyphicon-send"

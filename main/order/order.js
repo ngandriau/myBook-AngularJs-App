@@ -1,48 +1,38 @@
 var BookApp = angular.module("BookApp");
 
-var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
+var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope, $http) {
 
 
-        $scope.orderSearch = {value: "", mode: "orderId"};
+        $scope.orderSearch = {value: "", mode: "id"};
         $scope.isValidSearch = function () {
             return !_.isEmpty($scope.orderSearch.value);
         };
         $scope.isOrderIdSearchMode = function () {
-            return  $scope.orderSearch.mode == "orderId"
+            return  $scope.orderSearch.mode == "id"
         };
         $scope.lastOrderSearch;
 
         $scope.searchOrder = function () {
             console.log("searchOrder(value:" + $scope.orderSearch.value + ", mode:" + $scope.orderSearch.mode + ")")
             $scope.lastOrderSearch = {value: $scope.orderSearch.value, mode: $scope.orderSearch.mode};
-        }
+
+            $http.get("http://localhost:8080/mycomp/orders")
+                .success(function (data, status, headers, config) {
+                    console.log("== rest call returned:" + JSON.stringify(data));
+
+                    $scope.orderSearchResult.totalNbResults = data.length;
+                    $scope.orderSearchResult.orders = data;
+                })
+                .error(function (data, status, headers, config) {
+                    console.log("== rest call error.");
+                    $scope.orderSearchResult.totalNbResults = CONSTANTS.ORDERS_TEST_DATASET.length;
+                    $scope.orderSearchResult.orders = CONSTANTS.ORDERS_TEST_DATASET;
+                })
+        };
 
         $scope.orderSearchResult = {
-            totalNbResults: 10,
-            orders: [
-                {orderId: 1, customerFirstname: "Nicolas", customerLastname: "Gandriau",
-                    books: [
-                        {isbn: "1", title: "book1", price: "23"},
-                        {isbn: "2", title: "book2", price: "23"}
-                    ],
-                    amount: "123.45",
-                    needConfirmation: false},
-                {orderId: 2, customerFirstname: "Nicolas", customerLastname: "Gandriau",
-                    books: [
-                        {isbn: "1", title: "book1", price: "23"},
-                        {isbn: "3", title: "book3", price: "23"},
-                        {isbn: "2", title: "book2", price: "23"}
-                    ],
-                    amount: "456.33",
-                    needConfirmation: true},
-                {orderId: 3, customerFirstname: "Nicolas", customerLastname: "Gandriau",
-                    books: [
-                        {isbn: "1", title: "book1", price: "23"},
-                        {isbn: "2", title: "book2", price: "23"}
-                    ],
-                    amount: "789.12",
-                    needConfirmation: true}
-            ]};
+            totalNbResults: CONSTANTS.ORDERS_TEST_DATASET.LENGTH,
+            orders: CONSTANTS.ORDERS_TEST_DATASET};
 
         // SELECTED ORDER
 
@@ -113,12 +103,12 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
                 $scope.selectedOrder.editedOrder.books.push({isbn: $scope.newBookIsbn, title: $scope.newBookTitle, price: "???"});
                 $scope.newBookIsbn = '';
                 $scope.newBookTitle = '';
-            }else{
-                $scope.alerts.push({type:'danger', msg: 'provide title and isbn of book to add!'});
+            } else {
+                $scope.alerts.push({type: 'danger', msg: 'provide title and isbn of book to add!'});
             }
         };
 
-        $scope.canAddBookToOrder = function(){
+        $scope.canAddBookToOrder = function () {
             return !_.isEmpty($scope.newBookIsbn) && !_.isEmpty($scope.newBookTitle)
         };
 
@@ -137,3 +127,30 @@ var OrderCtrl = BookApp.controller("OrderCtrl", function ($scope) {
         };
     }
 );
+
+var CONSTANTS = {
+    "ORDERS_TEST_DATASET": [
+        {id: 1, customerFirstname: "Nicolas", customerLastname: "Gandriau", status: "submited",
+            books: [
+                {isbn: "1", title: "book1", price: "23"},
+                {isbn: "2", title: "book2", price: "23"}
+            ],
+            amount: "123.45",
+            needConfirmation: false},
+        {id: 2, customerFirstname: "Nicolas", customerLastname: "Gandriau", status: "rejected",
+            books: [
+                {isbn: "1", title: "book1", price: "23"},
+                {isbn: "3", title: "book3", price: "23"},
+                {isbn: "2", title: "book2", price: "23"}
+            ],
+            amount: "456.33",
+            needConfirmation: true},
+        {id: 3, customerFirstname: "Nicolas", customerLastname: "Gandriau", status: "needApprovalChecked",
+            books: [
+                {isbn: "1", title: "book1", price: "23"},
+                {isbn: "2", title: "book2", price: "23"}
+            ],
+            amount: "789.12",
+            needConfirmation: true}
+    ]
+};

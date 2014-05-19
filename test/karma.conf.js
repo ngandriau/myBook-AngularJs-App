@@ -16,9 +16,11 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         // NICO; The order of the import is important. angular first, then angular-mock...
         files: [
+            'main/vendors/underscore/underscore.js',
             'main/vendors/jquery/jquery.min.js',
             'main/vendors/bootstrap/js/bootstrap.js',
             'main/vendors/angular/angular.js',
+            'main/vendors/ui-bootstrap/ui-bootstrap-tpls.js',
             'test/vendors/angular/angular-mocks.js',
             'main/application/**/*.js',
             'main/order/**/*.js',
